@@ -92,5 +92,4 @@ A **User Management CRUD** application developed as part of a commission-based p
    npm run dev
 
 7. **Access the Application**  
-   ```bash
    Open your browser and navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000).
