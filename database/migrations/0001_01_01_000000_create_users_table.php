@@ -42,7 +42,7 @@ return new class extends Migration
         User::insert([
             [
                 'name' => 'John Doe',
-                'email' => 'admin@example.com',
+                'email' => 'admin@gmail.com',
                 'password' => Hash::make('asd'),
                 'role' => 'Admin',
                 'created_at' => now(),
@@ -50,7 +50,7 @@ return new class extends Migration
             ],
             [
                 'name' => 'Sierra Marie Bunilla',
-                'email' => 'sierra@example.com',
+                'email' => 'sierra@gmail.com',
                 'password' => Hash::make('asd'),
                 'role' => 'Client',
                 'created_at' => now(),

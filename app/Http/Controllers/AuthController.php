@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     public function __invoke(){
-        return view('pages.test');
+        return view('pages.index');
     }  
 
     public function gotoSignIn(){
