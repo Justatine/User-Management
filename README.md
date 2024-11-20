@@ -93,4 +93,4 @@ A **User Management CRUD** application developed as part of a commission-based p
 
 1. **Access the Application**  
    ```bash
-   http://127.0.0.1:8000/
+   (http://127.0.0.1:8000/)[http://127.0.0.1:8000/]
