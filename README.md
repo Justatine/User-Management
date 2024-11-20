@@ -52,15 +52,15 @@ A **User Management CRUD** application developed as part of a commission-based p
    git clone https://github.com/your-username/user-management-crud.git
    cd user-management-crud
 
-1. **Build Docker Containers**  
+2. **Build Docker Containers**  
    ```bash
    docker-compose up -d --build
 
-1. **Access the Application**  
+3. **Access the Application**  
    ```bash
    http://127.0.0.1:8000/
 
-1. **Run Migrations**  
+4. **Run Migrations**  
    ```bash
    docker-compose exec app php artisan migrate
 
@@ -70,27 +70,27 @@ A **User Management CRUD** application developed as part of a commission-based p
     git clone https://github.com/your-username/user-management-crud.git
     cd user-management-crud
 
-1. **Install Dependencies**  
+2. **Install Dependencies**  
    ```bash
    composer install
    npm install
 
-1. **Set Up .env File**  
+3. **Set Up .env File**  
    ```bash
    cp .env.example .env
 
-1. **Run Migration**  
+4. **Run Migration**  
    ```bash
    php artisan migrate
 
-1. **Run the Development Server**  
+5. **Run the Development Server**  
    ```bash
    php artisan serve
 
-1. **Build Frontend Assets**  
+6. **Build Frontend Assets**  
    ```bash
    npm run dev
 
-1. **Access the Application**  
+7. **Access the Application**  
    ```bash
-   [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+   Open your browser and navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000).
