@@ -1,0 +1,7 @@
+.active {
+    color: #3b82f6; 
+}
+
+.dark .active {
+    color: #3b82f6;
+}
