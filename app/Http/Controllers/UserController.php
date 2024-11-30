@@ -10,7 +10,7 @@ use Carbon\Carbon;
 class UserController extends Controller
 {
     public function __invoke(){
-        $users = User::orderBy('created_at', 'desc')->get();    
+        $users = User::where('id', '!=', auth()->user()->id)->orderBy('created_at', 'desc')->get();    
 
         $users->each(function($user) {
             $user->formatted_created_at = Carbon::parse($user->created_at)->format('F j, Y');

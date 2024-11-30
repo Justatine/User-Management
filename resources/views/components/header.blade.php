@@ -17,7 +17,16 @@
                         Home
                     </a>                
                 </li>
+
                 @if (Auth::check())
+                    <li>
+                        <a href="{{ Auth::check() && Auth::user()->role === 'Admin' ? url('/gifs-images') : (Auth::check() && Auth::user()->role === 'Client' ? url('/home/gifs-images') : url('/gifs-images')) }}" 
+                            class="block py-2 px-3 rounded md:bg-transparent md:p-0 dark:text-white
+                             {{ request()->is('/gifs-images') || request()->is('/gifs-images') || request()->is('/home/gifs-images') ? 'active text-blue-700 md:text-blue-700 dark:text-blue-500' : 'text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent' }}">
+                            Images
+                        </a>                
+                    </li>
+                
                     <li>
                         <a href="{{ url('/profile') }}" 
                             class="block py-2 px-3 rounded md:p-0 {{ request()->is('profile') ? 'active text-blue-700 md:text-blue-700 dark:text-blue-500' : 'text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent' }}">Profile</a>

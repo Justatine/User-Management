@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\GIFController;
+use App\Http\Controllers\ImageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
@@ -18,13 +20,23 @@ Route::middleware(['auth','is_authenticated'])->group(function(){
 });     
 
 Route::middleware(['auth','is_admin'])->group(function(){
+    // Users
     Route::get('/dashboard', [UserController::class, '__invoke']); 
     Route::post('/add/user', [UserController::class, 'store'])->name('user.store');
     Route::get('/user/{id}',[UserController::class, 'show'])->name('user.edit');
     Route::put('/user/{id}',[UserController::class, 'update'])->name('user.update');
     Route::delete('/user/{id}',[UserController::class, 'destroy'])->name('user.destroy');
+
+    // Gifs
+    Route::get('/gifs-images', [GIFController::class, '__invoke'])->name('gifs-images');
+    Route::post('/admin/images', [GIFController::class, 'store'])->name('admin.images.store');
+    Route::delete('/admin/images/{image}', [GIFController::class, 'destroy'])->name('admin.images.destroy');
+    Route::put('/admin/images/{image}', [GIFController::class, 'update'])->name('admin.images.update');
 }); 
 
 Route::middleware(['auth','is_client'])->group(function(){
     Route::get('/home', [UserController::class, 'gotoClientPage']); 
+    
+    // Gifs
+    Route::get('/home/gifs-images', [GIFController::class, 'home']);  
 }); 
