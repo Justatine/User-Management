@@ -5,6 +5,8 @@ use App\Http\Controllers\ImageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\CommentController;
 
 Route::get('/', [AuthController::class, '__invoke']); 
 Route::get('/sign-in', [AuthController::class, 'gotoSignIn'])->name('login'); 
@@ -40,3 +42,14 @@ Route::middleware(['auth','is_client'])->group(function(){
     // Gifs
     Route::get('/home/gifs-images', [GIFController::class, 'home']);  
 }); 
+
+Route::get('/gif/download/{gif}', [GIFController::class, 'download'])->name('gif.download');
+Route::post('/favorites/{gif}', [GIFController::class, 'toggleFavorite'])->name('gif.favorite');
+
+Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+
+Route::delete('/favorites/{favorite}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
+
+Route::get('/gifs/{gif}/comments', [GifController::class, 'comments'])->name('gif.comments');
+Route::post('/gifs/{gif}/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');

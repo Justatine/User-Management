@@ -24,27 +24,72 @@
                 </button>
             </form>
         </div>
+        @include('partials.alerts')
+
+        
         <div class="bg-white shadow-md rounded-lg overflow-hidden p-5">
-            @include('partials.alerts')
+            <h1 class="font-bold mb-3">Top Downloaded Gifs</h1> 
+            @if($mostDownloaded->count() > 0)
+                <div class="flex flex-wrap -m-2">
+                    @foreach ($mostDownloaded as $md)
+                        <div class="relative w-1/3 m-2 p-2 border-2 border-gray-300 rounded-lg">
+                            <div class="h-[200px]">
+                                <img src="{{ asset('storage/images/'.$md->image) }}" alt="Gif Image" 
+                                    class="w-full h-full object-cover rounded">
+                            </div>
+                            <div class="absolute top-0 right-0 p-2">
+                                <a href="{{ route('gif.comments', $md->id) }}" class="text-gray-600 hover:text-gray-800">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                                    </svg>
+                                </a>
+                            </div>
+                            <div class="mt-2 text-sm text-gray-600 flex justify-between">
+                                <span>Downloads: {{ $md->download_count }}</span>
+                                <span>Designer: {{ $md->user_name }}</span>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-gray-500 text-center py-4">No GIF images available.</p>
+            @endif
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg overflow-hidden p-5">
+            <h1 class="font-bold mb-3">My GIFs</h1> 
 
             @if($gifs->count() > 0)
-                @foreach ($gifs as $gif)
-                    <div class="relative inline-block w-1/3 m-2">
-                        <img src="{{ asset('storage/images/'.$gif->image) }}" alt="Gif Image" class="w-full h-auto">
-                        <div class="absolute top-0 right-0 p-2 flex gap-2">
-                            <button onclick="showUpdateForm('{{ $gif->id }}', '{{ $gif->image }}')" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded text-sm">
-                                Edit
-                            </button>
-                            <form action="{{ route('admin.images.destroy', $gif->id) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this image?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm">
-                                    Delete
+                <div class="flex flex-wrap -m-2">
+                    @foreach ($gifs as $gif)
+                        <div class="relative w-1/3 m-2 p-2 border-2 border-gray-300 rounded-lg">
+                            <div class="h-[200px]">
+                                <img src="{{ asset('storage/images/'.$gif->image) }}" alt="Gif Image" 
+                                    class="w-full h-full object-cover rounded">
+                            </div>
+                            
+                            <div class="absolute top-0 right-0 p-2 flex gap-2">
+                                <a href="{{ route('gif.comments', $gif->id) }}" class="text-gray-600 hover:text-gray-800">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                                    </svg>
+                                </a>
+                                <button onclick="showUpdateForm('{{ $gif->id }}', '{{ $gif->image }}')" 
+                                    class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded text-sm">
+                                    Edit
                                 </button>
-                            </form>
+                                <form action="{{ route('admin.images.destroy', $gif->id) }}" method="POST" class="inline" 
+                                    onsubmit="return confirm('Are you sure you want to delete this image?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-sm">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
 
                 <!-- Update Form Modal -->
                 <div id="updateModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">

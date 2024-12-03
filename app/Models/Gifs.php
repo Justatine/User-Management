@@ -9,6 +9,11 @@ class Gifs extends Model
     public $timestamps = true;  
     protected $fillable = [
         'userid',
-        'image'
+        'image',
+        'download_count'
     ];
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'gif_id');
+    }
 }

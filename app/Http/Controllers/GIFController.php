@@ -9,10 +9,17 @@ use Illuminate\Support\Facades\Storage;
 class GIFController extends Controller
 {
     public function __invoke(){
+        $mostDownloaded = Gifs::join('users', 'gifs.userid', '=', 'users.id')
+        ->select('gifs.*', 'users.name as user_name')
+        ->orderBy('download_count', 'desc')
+        ->take(3)
+        ->get();  
+
         $gifs = Gifs::where('userid', auth()->user()->id)->get();  
 
         return view('pages.admin.images',[
-            'gifs' => $gifs 
+            'gifs' => $gifs ,
+            'mostDownloaded' => $mostDownloaded 
         ]);
     }   
 
@@ -21,8 +28,15 @@ class GIFController extends Controller
             ->select('gifs.*', 'users.name as user_name')
             ->get();  
 
+        $mostDownloaded = Gifs::join('users', 'gifs.userid', '=', 'users.id')
+            ->select('gifs.*', 'users.name as user_name')
+            ->orderBy('download_count', 'desc')
+            ->take(3)
+            ->get();  
+            
         return view('pages.client.images',[
-            'gifs' => $gifs 
+            'gifs' => $gifs ,
+            'mostDownloaded' => $mostDownloaded
         ]);
     }   
 
@@ -90,5 +104,37 @@ class GIFController extends Controller
         $gif->delete();
 
         return redirect()->back()->with('success',true)->with('message', 'Image deleted successfully');
+    }
+
+    public function download(Gifs $gif)
+    {
+        // Increment the download counter
+        $gif->increment('download_count');
+
+        // Return the file download
+        return response()->download(storage_path('app/public/images/' . $gif->image));
+    }
+
+    public function toggleFavorite(Gifs $gif)
+    {
+        $favorite = auth()->user()->favorites()->where('gif_id', $gif->id)->first();
+        
+        if ($favorite) {
+            $favorite->delete();
+            return response()->json(['status' => 'removed']);
+        } else {
+            auth()->user()->favorites()->create([
+                'gif_id' => $gif->id
+            ]);
+            return response()->json(['status' => 'added']);
+        }
+    }
+    public function comments(Gifs $gif)
+    {
+        $comments = $gif->comments()->with('user')->latest()->get();
+        return view('pages.client.gif-comments', [
+            'comments' => $comments,
+            'gif' => $gif
+        ]);
     }
 }

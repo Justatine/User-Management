@@ -91,5 +91,6 @@
         resetTable();
         }
     </script>
+    @stack('scripts')
 </body>
 </html>
