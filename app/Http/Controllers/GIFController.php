@@ -11,6 +11,7 @@ class GIFController extends Controller
     public function __invoke(){
         $mostDownloaded = Gifs::join('users', 'gifs.userid', '=', 'users.id')
         ->select('gifs.*', 'users.name as user_name')
+        ->where('download_count','>',0)
         ->orderBy('download_count', 'desc')
         ->take(3)
         ->get();  
@@ -23,16 +24,21 @@ class GIFController extends Controller
         ]);
     }   
 
-    public function home(){
-        $gifs = Gifs::join('users', 'gifs.userid', '=', 'users.id')
-            ->select('gifs.*', 'users.name as user_name')
-            ->get();  
+    public function home(Request $request){
+        $search = $request->input('search');
 
-        $mostDownloaded = Gifs::join('users', 'gifs.userid', '=', 'users.id')
+        $gifs = Gifs::query()
+            ->join('users', 'gifs.userid', '=', 'users.id')
             ->select('gifs.*', 'users.name as user_name')
-            ->orderBy('download_count', 'desc')
-            ->take(3)
-            ->get();  
+            ->when($search, function ($query) use ($search) {
+                return $query->where('title', 'LIKE', '%' . $search . '%');
+            })
+            ->latest()
+            ->get();
+    
+        $mostDownloaded = Gifs::where('download_count','>',0)->orderBy('download_count', 'desc')
+            ->take(6)
+            ->get();
             
         return view('pages.client.images',[
             'gifs' => $gifs ,
@@ -43,7 +49,8 @@ class GIFController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'image' => 'required|image|mimes:gif|max:2048'
+            'image' => 'required|image|mimes:gif|max:2048',
+            'title' => 'required|string|max:255'
         ]);
 
         if ($request->hasFile('image')) {
@@ -53,15 +60,14 @@ class GIFController extends Controller
             // Store the file in storage/app/public/images
             $path = $image->storeAs('images', $filename, 'public');
 
-            // Create database record
+            // Create database record with title
             Gifs::create([
                 'userid' => auth()->id(),
-                'image' => $filename
+                'image' => $filename,
+                'title' => $request->title
             ]);
 
             return redirect()->back()->with('success',true)->with('message', 'Image uploaded successfully');
-
-            // return redirect()->route('gifs-images')->with('success', 'Image uploaded successfully');
         }
 
         return redirect()->route('gifs-images')->with('error', 'No image uploaded');
@@ -70,25 +76,31 @@ class GIFController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'image' => 'required|image|mimes:gif|max:2048'
+            'image' => 'nullable|image|mimes:gif|max:2048',
+            'title' => 'required|string|max:255'
         ]);
 
         $gif = Gifs::findOrFail($id);
 
-        // Delete old image
-        if (Storage::disk('public')->exists('images/' . $gif->image)) {
-            Storage::disk('public')->delete('images/' . $gif->image);
+        if ($request->hasFile('image')) {
+            // Delete old image
+            if (Storage::disk('public')->exists('images/' . $gif->image)) {
+                Storage::disk('public')->delete('images/' . $gif->image);
+            }
+
+            // Store new image
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->storeAs('images', $imageName, 'public');
+
+            // Update image in database record
+            $gif->image = $imageName;
         }
 
-        // Store new image
-        $imageName = time() . '.' . $request->image->extension();
-        $request->image->storeAs('images', $imageName, 'public');
-
-        // Update database record
-        $gif->image = $imageName;
+        // Update title in database record
+        $gif->title = $request->title;
         $gif->save();
 
-        return redirect()->back()->with('success',true)->with('message', 'Image updated successfully');
+        return redirect()->back()->with('success', true)->with('message', 'Image updated successfully');
     }
 
     public function destroy($id)

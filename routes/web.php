@@ -53,3 +53,5 @@ Route::delete('/favorites/{favorite}', [FavoriteController::class, 'destroy'])->
 Route::get('/gifs/{gif}/comments', [GifController::class, 'comments'])->name('gif.comments');
 Route::post('/gifs/{gif}/comments', [CommentController::class, 'store'])->name('comments.store');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+Route::get('/images', [GIFController::class, 'home'])->name('images.index');

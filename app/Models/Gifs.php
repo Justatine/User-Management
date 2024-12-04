@@ -9,6 +9,7 @@ class Gifs extends Model
     public $timestamps = true;  
     protected $fillable = [
         'userid',
+        'title',
         'image',
         'download_count'
     ];

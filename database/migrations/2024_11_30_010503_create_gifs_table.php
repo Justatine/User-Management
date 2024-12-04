@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('userid');   
             $table->text('image');
+            $table->text('title');
             $table->integer('download_count')->default(0);
             $table->timestamps();
 

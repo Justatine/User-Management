@@ -37,7 +37,24 @@
         </div>
 
         <div class="bg-white shadow-md rounded-lg overflow-hidden p-5">
-            <h1 class="font-bold mb-3">Giphy Images</h1>
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="font-bold">Giphy Images</h1>
+                
+                <div class="flex justify-center">
+                    <form action="{{ route('images.index') }}" method="GET" class="flex">
+                        <input type="text" 
+                               name="search" 
+                               placeholder="Search by title..." 
+                               value="{{ request('search') }}"
+                               class="border border-gray-300 rounded-l px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button type="submit" 
+                                class="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            Search
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
             @if($gifs->count() > 0)
                 <div class="flex flex-wrap -m-2">
                     @foreach ($gifs as $gif)
@@ -78,7 +95,7 @@
                             </div>
                             <div class="mt-2 text-sm text-gray-600 flex justify-between">
                                 <span>Downloads: {{ $gif->download_count }}</span>
-                                <span>Designer: {{ $gif->user_name }}</span>
+                                <span><span class="font-semibold italic">{{ $gif->title }}</span> by {{ $gif->user_name }}</span>
                             </div>
                         </div>
                     @endforeach
